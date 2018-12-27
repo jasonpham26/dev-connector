@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCurrentProfile, deleteAccount } from '../../actions/profileActions';
 import Spinner from '../common/Spinner';
-import { Link } from 'react-router-dom';
 import ProfileActions from './ProfileActions';
 import Experience from './Experience';
+import Education from './Education';
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -15,13 +16,14 @@ class Dashboard extends Component {
   onDeleteClick(e) {
     this.props.deleteAccount();
   }
+
   render() {
     const { user } = this.props.auth;
     const { profile, loading } = this.props.profile;
 
     let dashboardContent;
 
-    if (profile === null || loading === true) {
+    if (profile === null || loading) {
       dashboardContent = <Spinner />;
     } else {
       // Check if logged in user has profile data
@@ -29,25 +31,25 @@ class Dashboard extends Component {
         dashboardContent = (
           <div>
             <p className="lead text-muted">
-              <Link to={`/profile/${profile.handle}`}>Welcome {user.name}</Link>
+              Welcome <Link to={`/profile/${profile.handle}`}>{user.name}</Link>
             </p>
             <ProfileActions />
             <Experience experience={profile.experience} />
-            <div style={{ marginBottom: '60px' }}>
-              <button
-                onClick={this.onDeleteClick.bind(this)}
-                className="btn btn-danger"
-              >
-                Delete My Account
-              </button>
-            </div>
+            <Education education={profile.education} />
+            <div style={{ marginBottom: '60px' }} />
+            <button
+              onClick={this.onDeleteClick.bind(this)}
+              className="btn btn-danger"
+            >
+              Delete My Account
+            </button>
           </div>
         );
       } else {
         // User is logged in but has no profile
         dashboardContent = (
           <div>
-            <p className="lead text-muted">Welcome {user.name} </p>
+            <p className="lead text-muted">Welcome {user.name}</p>
             <p>You have not yet setup a profile, please add some info</p>
             <Link to="/create-profile" className="btn btn-lg btn-info">
               Create Profile
@@ -84,7 +86,6 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { getCurrentProfile, deleteAccount }
-)(Dashboard);
+export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(
+  Dashboard
+);

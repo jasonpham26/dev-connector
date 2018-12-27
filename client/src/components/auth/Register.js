@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/authActions';
 import TextFieldGroup from '../common/TextFieldGroup';
+
 class Register extends Component {
   constructor() {
     super();
@@ -19,10 +20,6 @@ class Register extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
-  }
-
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
       this.props.history.push('/dashboard');
@@ -35,8 +32,13 @@ class Register extends Component {
     }
   }
 
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
   onSubmit(e) {
     e.preventDefault();
+
     const newUser = {
       name: this.state.name,
       email: this.state.email,
@@ -59,16 +61,14 @@ class Register extends Component {
               <p className="lead text-center">
                 Create your DevConnector account
               </p>
-              <form onSubmit={this.onSubmit}>
+              <form noValidate onSubmit={this.onSubmit}>
                 <TextFieldGroup
-                  placeholder="Email Address"
+                  placeholder="Name"
                   name="name"
-                  type="text"
                   value={this.state.name}
                   onChange={this.onChange}
                   error={errors.name}
                 />
-
                 <TextFieldGroup
                   placeholder="Email"
                   name="email"
@@ -76,8 +76,7 @@ class Register extends Component {
                   value={this.state.email}
                   onChange={this.onChange}
                   error={errors.email}
-                  info="This site uses Gravatar so if you want a profile image, use
-                  a Gravatar email"
+                  info="This site uses Gravatar so if you want a profile image, use a Gravatar email"
                 />
                 <TextFieldGroup
                   placeholder="Password"
@@ -116,7 +115,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { registerUser }
-)(withRouter(Register));
+export default connect(mapStateToProps, { registerUser })(withRouter(Register));

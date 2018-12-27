@@ -1,5 +1,6 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
+
 module.exports = function validateRegisterInput(data) {
   let errors = {};
 
@@ -33,11 +34,11 @@ module.exports = function validateRegisterInput(data) {
   }
 
   if (Validator.isEmpty(data.password2)) {
-    errors.password2 = 'Confirm password field is required';
+    errors.password2 = 'Confirm Password field is required';
   }
 
   if (!Validator.equals(data.password, data.password2)) {
-    errors.password2 = 'Password does not match';
+    errors.password2 = 'Passwords must match';
   }
 
   return {

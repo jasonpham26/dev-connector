@@ -28,6 +28,7 @@ class CreateProfile extends Component {
       instagram: '',
       errors: {}
     };
+
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -119,6 +120,7 @@ class CreateProfile extends Component {
         </div>
       );
     }
+
     // Select options for status
     const options = [
       { label: '* Select Professional Status', value: 0 },
@@ -209,6 +211,7 @@ class CreateProfile extends Component {
                   error={errors.bio}
                   info="Tell us a little about yourself"
                 />
+
                 <div className="mb-3">
                   <button
                     type="button"
@@ -242,10 +245,12 @@ CreateProfile.propTypes = {
   profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
+
 const mapStateToProps = state => ({
   profile: state.profile,
   errors: state.errors
 });
+
 export default connect(
   mapStateToProps,
   { createProfile }

@@ -11,6 +11,7 @@ class Navbar extends Component {
     this.props.clearCurrentProfile();
     this.props.logoutUser();
   }
+
   render() {
     const { isAuthenticated, user } = this.props.auth;
 
@@ -54,6 +55,7 @@ class Navbar extends Component {
         </li>
       </ul>
     );
+
     return (
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
         <div className="container">
@@ -72,10 +74,10 @@ class Navbar extends Component {
           <div className="collapse navbar-collapse" id="mobile-nav">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <a className="nav-link" href="profiles.html">
+                <Link className="nav-link" to="/profiles">
                   {' '}
                   Developers
-                </a>
+                </Link>
               </li>
             </ul>
             {isAuthenticated ? authLinks : guestLinks}
@@ -90,9 +92,11 @@ Navbar.propTypes = {
   logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
+
 const mapStateToProps = state => ({
   auth: state.auth
 });
+
 export default connect(
   mapStateToProps,
   { logoutUser, clearCurrentProfile }

@@ -2,30 +2,53 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
+
 // Post model
 const Post = require('../../models/Post');
-// Post profile
+// Profile model
 const Profile = require('../../models/Profile');
 
 // Validation
 const validatePostInput = require('../../validation/post');
 
-// @route GET api/posts/test
-// @desc Tests post route
-// @access Public
-router.get('/test', (req, res) => res.json({ msg: 'Post Works' }));
+// @route   GET api/posts/test
+// @desc    Tests post route
+// @access  Public
+router.get('/test', (req, res) => res.json({ msg: 'Posts Works' }));
 
-// @route POST api/posts
-// @desc Create post
-// @access Private
+// @route   GET api/posts
+// @desc    Get posts
+// @access  Public
+router.get('/', (req, res) => {
+  Post.find()
+    .sort({ date: -1 })
+    .then(posts => res.json(posts))
+    .catch(err => res.status(404).json({ nopostsfound: 'No posts found' }));
+});
+
+// @route   GET api/posts/:id
+// @desc    Get post by id
+// @access  Public
+router.get('/:id', (req, res) => {
+  Post.findById(req.params.id)
+    .then(post => res.json(post))
+    .catch(err =>
+      res.status(404).json({ nopostfound: 'No post found with that ID' })
+    );
+});
+
+// @route   POST api/posts
+// @desc    Create post
+// @access  Private
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const { errors, isValid } = validatePostInput(req.body);
 
+    // Check Validation
     if (!isValid) {
-      // If any errors, send 400 wih objects
+      // If any errors, send 400 with errors object
       return res.status(400).json(errors);
     }
 
@@ -40,28 +63,9 @@ router.post(
   }
 );
 
-// @route GET api/posts
-// @desc Get posts
-// @access Public
-router.get('/', (req, res) => {
-  Post.find()
-    .sort({ date: -1 })
-    .then(posts => res.json(posts))
-    .catch(err => res.status(404).json({ nopostsfound: 'No posts found' }));
-});
-
-// @route GET api/posts/:id
-// @desc Get post by ID
-// @access Public
-router.get('/:id', (req, res) => {
-  Post.findById(req.params.id)
-    .then(post => res.json(post))
-    .catch(err => res.status(404).json({ nopostfound: 'No post found' }));
-});
-
-// @route DELETE api/posts/:id
-// @desc delete post by ID
-// @access Pirate
+// @route   DELETE api/posts/:id
+// @desc    Delete post
+// @access  Private
 router.delete(
   '/:id',
   passport.authenticate('jwt', { session: false }),
@@ -73,7 +77,7 @@ router.delete(
           if (post.user.toString() !== req.user.id) {
             return res
               .status(401)
-              .json({ noauthorized: 'User not authorized' });
+              .json({ notauthorized: 'User not authorized' });
           }
 
           // Delete
@@ -84,9 +88,9 @@ router.delete(
   }
 );
 
-// @route POST api/posts/like/:id
-// @desc Like post
-// @access Pirate
+// @route   POST api/posts/like/:id
+// @desc    Like post
+// @access  Private
 router.post(
   '/like/:id',
   passport.authenticate('jwt', { session: false }),
@@ -95,12 +99,12 @@ router.post(
       Post.findById(req.params.id)
         .then(post => {
           if (
-            post.likes.filter(like => like.user.toString === req.user.id)
+            post.likes.filter(like => like.user.toString() === req.user.id)
               .length > 0
           ) {
             return res
               .status(400)
-              .json({ alreadyliked: 'User already like this post' });
+              .json({ alreadyliked: 'User already liked this post' });
           }
 
           // Add user id to likes array
@@ -157,8 +161,9 @@ router.post(
   (req, res) => {
     const { errors, isValid } = validatePostInput(req.body);
 
+    // Check Validation
     if (!isValid) {
-      // If any errors, send 400 wih objects
+      // If any errors, send 400 with errors object
       return res.status(400).json(errors);
     }
 
@@ -171,7 +176,7 @@ router.post(
           user: req.user.id
         };
 
-        // Add comment to array
+        // Add to comments array
         post.comments.unshift(newComment);
 
         // Save
