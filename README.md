@@ -37,6 +37,17 @@ Atlas MongoDB:
 https://www.mongodb.com/cloud/atlas
 
 
+## Screenshots
+### Landing page
+![](https://user-images.githubusercontent.com/29946940/52174545-3f9eb000-27e1-11e9-9796-6a9a00cb5923.png)
+
+### Developers profiles listing
+![](https://user-images.githubusercontent.com/29946940/52176578-5d2f4200-2800-11e9-8963-c159b4a2ac5c.png)
+
+### Profile Details 
+![](https://user-images.githubusercontent.com/29946940/52176597-8fd93a80-2800-11e9-9b0d-70de067358a6.png)
+### Writting posts, comments and like feature
+![image](https://user-images.githubusercontent.com/29946940/52176612-ce6ef500-2800-11e9-92b9-6fbbdfd86087.png)
 
 
 ## Authors
